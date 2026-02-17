@@ -4,6 +4,12 @@ Interactive CLI wrapper for [git-worktree-runner](https://github.com/coderabbita
 
 ![Demo](demo.gif)
 
+## Requirements
+
+- [git-worktree-runner](https://github.com/coderabbitai/git-worktree-runner)
+- Git 2.17+
+- Bash 3.2+ (4.0+ recommended)
+
 ## Usage
 
 ```bash
