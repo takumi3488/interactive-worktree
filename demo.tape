@@ -2,6 +2,7 @@ Output demo.gif
 Set FontSize 14
 Set Width 800
 Set Height 600
+Set PlaybackSpeed 0.7
 
 Type "iwt"
 Sleep 300ms
