@@ -7,6 +7,10 @@ name = "interactive-worktree"
 repository = "https://github.com/takumi3488/interactive-worktree"
 version = "0.1.0"
 
+[[bin]]
+name = "iwt"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
