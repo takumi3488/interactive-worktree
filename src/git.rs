@@ -2,14 +2,14 @@
 
 use std::process::Command;
 
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
 
 /// Check if we are inside a git repository.
 pub fn is_inside_repo() -> bool {
     Command::new("git")
         .args(["rev-parse", "--is-inside-work-tree"])
         .output()
-        .map(|o| o.status.success())
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "true")
         .unwrap_or(false)
 }
 
@@ -19,6 +19,13 @@ pub fn branch_list() -> Result<Vec<String>> {
         .args(["branch", "--format=%(refname:short)"])
         .output()
         .context("Failed to list branches")?;
+
+    if !output.status.success() {
+        bail!(
+            "Failed to list branches: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     Ok(stdout
@@ -35,11 +42,18 @@ pub fn remote_branch_list() -> Result<Vec<String>> {
         .output()
         .context("Failed to list remote branches")?;
 
+    if !output.status.success() {
+        bail!(
+            "Failed to list remote branches: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+
     let stdout = String::from_utf8_lossy(&output.stdout);
     Ok(stdout
         .lines()
         .map(|s| s.trim().to_string())
-        .filter(|s| !s.is_empty() && !s.contains("HEAD"))
+        .filter(|s| !s.is_empty() && !s.ends_with("/HEAD"))
         .collect())
 }
 
@@ -66,6 +80,13 @@ pub fn worktree_list() -> Result<Vec<WorktreeInfo>> {
         .args(["worktree", "list", "--porcelain"])
         .output()
         .context("Failed to list worktrees")?;
+
+    if !output.status.success() {
+        bail!(
+            "Failed to list worktrees: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let mut worktrees = Vec::new();
