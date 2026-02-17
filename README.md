@@ -1,9 +1,10 @@
 # interactive-worktree
 
-## 概要
+Interactive CLI wrapper for [git-worktree-runner](https://github.com/coderabbitai/git-worktree-runner).
 
+## Usage
 
-
-## 開発
-
-Run `cargo run` to start the project.
+```bash
+cargo install interactive-worktree
+iwt
+```
