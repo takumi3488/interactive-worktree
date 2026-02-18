@@ -13,6 +13,7 @@ pub fn run() -> Result<()> {
 
     let mut args = vec!["new", &branch];
     let ref_value: String;
+    let ai_tool: String;
 
     match from {
         "Current branch" => args.push("--from-current"),
@@ -31,7 +32,16 @@ pub fn run() -> Result<()> {
 
     match post {
         "Open in editor" => args.push("--editor"),
-        "Start AI tool" => args.push("--ai"),
+        "Start AI tool" => {
+            ai_tool = Text::new("AI tool:")
+                .with_placeholder("claude, aider, copilot, codex, ...")
+                .with_help_message("Enter tool name, or press Enter for default")
+                .prompt()?;
+            args.push("--ai");
+            if !ai_tool.is_empty() {
+                args.push(&ai_tool);
+            }
+        }
         _ => {}
     }
 
