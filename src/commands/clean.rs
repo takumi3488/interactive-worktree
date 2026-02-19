@@ -11,8 +11,8 @@ pub fn run() -> Result<()> {
     // Show what would be cleaned (dry-run)
     println!("\n--- Dry run ---");
     let mut dry_args = vec!["clean", "--dry-run"];
-    if !merged_only {
-        dry_args.push("--all");
+    if merged_only {
+        dry_args.push("--merged");
     }
     let _ = gtr::exec(&dry_args);
 
@@ -26,8 +26,8 @@ pub fn run() -> Result<()> {
     }
 
     let mut args: Vec<&str> = vec!["clean", "--yes"];
-    if !merged_only {
-        args.push("--all");
+    if merged_only {
+        args.push("--merged");
     }
 
     gtr::exec(&args)
