@@ -20,7 +20,7 @@ pub fn run() -> Result<()> {
     }
 
     let delete_branch = Confirm::new("Also delete the branch(es)?")
-        .with_default(false)
+        .with_default(true)
         .prompt()?;
 
     let force = Confirm::new("Force removal (even if dirty)?")
