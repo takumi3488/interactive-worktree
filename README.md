@@ -12,7 +12,13 @@ Interactive CLI wrapper for [git-worktree-runner](https://github.com/coderabbita
 
 ## Installation
 
-### Using shell script installer (recommended)
+### Homebrew (macOS / Linux) - recommended
+
+```sh
+brew install takumi3488/tap/interactive-worktree
+```
+
+### Shell script installer
 
 Installs a prebuilt binary to `~/.cargo/bin`:
 
@@ -22,10 +28,10 @@ curl --proto '=https' --tlsv1.2 -LsSf https://github.com/takumi3488/interactive-
 
 Supported platforms: macOS (ARM64, x86_64), Linux (x86_64)
 
-### Using cargo
+### Build from source
 
 ```bash
-cargo install interactive-worktree
+cargo install --git https://github.com/takumi3488/interactive-worktree
 ```
 
 ## Usage
