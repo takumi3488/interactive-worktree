@@ -19,3 +19,5 @@ install-updater = false
 publish-jobs = ["homebrew"]
 # Homebrew tap repository
 tap = "takumi3488/homebrew-tap"
+# Allow manually modified CI files
+allow-dirty = ["ci"]
