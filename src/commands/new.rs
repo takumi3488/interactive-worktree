@@ -13,7 +13,7 @@ pub fn run() -> Result<()> {
 
     let mut args = vec!["new", &branch];
     let ref_value: String;
-    let ai_tool: String;
+    let mut ai_tool = String::new();
 
     match from {
         "Current branch" => args.push("--from-current"),
@@ -37,10 +37,11 @@ pub fn run() -> Result<()> {
                 .with_placeholder("claude, aider, copilot, codex, ...")
                 .with_help_message("Enter tool name, or press Enter for default")
                 .prompt()?;
-            args.push("--ai");
-            if !ai_tool.is_empty() {
-                args.push(&ai_tool);
+            if ai_tool.is_empty() {
+                // デフォルトツール: --ai フラグのみ
+                args.push("--ai");
             }
+            // ツール指定ありの場合は作成後に別途 git gtr ai で起動
         }
         _ => {}
     }
@@ -53,5 +54,12 @@ pub fn run() -> Result<()> {
         args.push("--no-copy");
     }
 
-    gtr::exec(&args)
+    gtr::exec(&args)?;
+
+    // ツール名を指定した場合、別途 git gtr ai で指定ツールを起動
+    if !ai_tool.is_empty() {
+        gtr::exec(&["ai", &branch, "--ai", &ai_tool])?;
+    }
+
+    Ok(())
 }
