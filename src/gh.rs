@@ -10,7 +10,7 @@ pub struct PullRequest {
     pub number: u64,
     pub title: String,
     pub head_ref_name: String,
-    pub author: Author,
+    pub author: Option<Author>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -20,10 +20,15 @@ pub struct Author {
 
 impl fmt::Display for PullRequest {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let login = self
+            .author
+            .as_ref()
+            .map(|a| a.login.as_str())
+            .unwrap_or("ghost");
         write!(
             f,
             "#{} {} ({}) [{}]",
-            self.number, self.title, self.author.login, self.head_ref_name
+            self.number, self.title, login, self.head_ref_name
         )
     }
 }
