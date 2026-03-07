@@ -1,7 +1,7 @@
 use anyhow::Result;
 use inquire::{Select, Text};
 
-use crate::{commands::prompt_post_args, gtr};
+use crate::commands::run_with_post_prompt;
 
 pub fn run() -> Result<()> {
     let branch = Text::new("Branch name:")
@@ -23,15 +23,5 @@ pub fn run() -> Result<()> {
         _ => {}
     }
 
-    let (extra, ai_tool) = prompt_post_args()?;
-    args.extend(extra);
-
-    let args_str: Vec<&str> = args.iter().map(String::as_str).collect();
-    gtr::exec(&args_str)?;
-
-    if let Some(tool) = &ai_tool {
-        gtr::exec(&["ai", &branch, "--ai", tool])?;
-    }
-
-    Ok(())
+    run_with_post_prompt(args, &branch)
 }

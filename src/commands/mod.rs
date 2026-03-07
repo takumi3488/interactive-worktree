@@ -15,6 +15,8 @@ pub mod run;
 use anyhow::Result;
 use inquire::{Confirm, Select, Text};
 
+use crate::gtr;
+
 /// Prompt for post-creation action and return the extra args to pass to `gtr new`,
 /// plus an optional AI tool name to invoke separately via `gtr ai`.
 pub(crate) fn prompt_post_args() -> Result<(Vec<String>, Option<String>)> {
@@ -52,4 +54,19 @@ pub(crate) fn prompt_post_args() -> Result<(Vec<String>, Option<String>)> {
     }
 
     Ok((extra, ai_tool))
+}
+
+/// Prompt for post-creation args, then execute the worktree creation and optional AI launch.
+pub(crate) fn run_with_post_prompt(mut args: Vec<String>, branch: &str) -> Result<()> {
+    let (extra, ai_tool) = prompt_post_args()?;
+    args.extend(extra);
+
+    let args_str: Vec<&str> = args.iter().map(String::as_str).collect();
+    gtr::exec(&args_str)?;
+
+    if let Some(tool) = &ai_tool {
+        gtr::exec(&["ai", branch, "--ai", tool])?;
+    }
+
+    Ok(())
 }
