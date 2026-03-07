@@ -11,7 +11,7 @@ pub fn run() -> Result<()> {
     let from_options = vec!["Default (main/master)", "Current branch", "Specific ref"];
     let from = Select::new("Starting point:", from_options).prompt()?;
 
-    let mut args = vec!["new".to_string(), branch];
+    let mut args = vec!["new".to_string(), branch.clone()];
 
     match from {
         "Current branch" => args.push("--from-current".to_string()),
@@ -23,8 +23,15 @@ pub fn run() -> Result<()> {
         _ => {}
     }
 
-    args.extend(prompt_post_args()?);
+    let (extra, ai_tool) = prompt_post_args()?;
+    args.extend(extra);
 
     let args_str: Vec<&str> = args.iter().map(String::as_str).collect();
-    gtr::exec(&args_str)
+    gtr::exec(&args_str)?;
+
+    if let Some(tool) = &ai_tool {
+        gtr::exec(&["ai", &branch, "--ai", tool])?;
+    }
+
+    Ok(())
 }

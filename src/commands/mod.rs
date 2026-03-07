@@ -15,9 +15,11 @@ pub mod run;
 use anyhow::Result;
 use inquire::{Confirm, Select, Text};
 
-/// Prompt for post-creation action and return the extra args to pass to `gtr new`.
-pub(crate) fn prompt_post_args() -> Result<Vec<String>> {
+/// Prompt for post-creation action and return the extra args to pass to `gtr new`,
+/// plus an optional AI tool name to invoke separately via `gtr ai`.
+pub(crate) fn prompt_post_args() -> Result<(Vec<String>, Option<String>)> {
     let mut extra: Vec<String> = Vec::new();
+    let mut ai_tool: Option<String> = None;
 
     let post = Select::new(
         "After creation:",
@@ -29,13 +31,14 @@ pub(crate) fn prompt_post_args() -> Result<Vec<String>> {
     match post {
         "Open in editor" => extra.push("--editor".to_string()),
         "Start AI tool" => {
-            let ai_tool = Text::new("AI tool:")
+            let tool = Text::new("AI tool:")
                 .with_placeholder("claude, aider, copilot, codex, ...")
                 .with_help_message("Enter tool name, or press Enter for default")
                 .prompt()?;
-            extra.push("--ai".to_string());
-            if !ai_tool.is_empty() {
-                extra.push(ai_tool);
+            if tool.is_empty() {
+                extra.push("--ai".to_string());
+            } else {
+                ai_tool = Some(tool);
             }
         }
         _ => {}
@@ -48,5 +51,5 @@ pub(crate) fn prompt_post_args() -> Result<Vec<String>> {
         extra.push("--no-copy".to_string());
     }
 
-    Ok(extra)
+    Ok((extra, ai_tool))
 }
