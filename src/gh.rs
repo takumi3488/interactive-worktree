@@ -28,15 +28,6 @@ impl fmt::Display for PullRequest {
     }
 }
 
-/// Check if `gh` CLI is available.
-pub fn is_available() -> bool {
-    Command::new("gh")
-        .arg("--version")
-        .output()
-        .map(|o| o.status.success())
-        .unwrap_or(false)
-}
-
 /// Fetch open pull requests from the current repository.
 pub fn pr_list() -> Result<Vec<PullRequest>> {
     let output = Command::new("gh")
