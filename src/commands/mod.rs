@@ -8,5 +8,6 @@ pub mod go;
 pub mod list;
 pub mod mv;
 pub mod new;
+pub mod pr;
 pub mod rm;
 pub mod run;
