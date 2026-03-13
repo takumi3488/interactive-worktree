@@ -20,11 +20,7 @@ pub struct Author {
 
 impl fmt::Display for PullRequest {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let login = self
-            .author
-            .as_ref()
-            .map(|a| a.login.as_str())
-            .unwrap_or("ghost");
+        let login = self.author.as_ref().map_or("ghost", |a| a.login.as_str());
         write!(
             f,
             "#{} {} ({}) [{}]",
