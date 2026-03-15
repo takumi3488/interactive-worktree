@@ -314,6 +314,16 @@ pub fn all_worktree_branches() -> Result<Vec<String>> {
     Ok(wts.into_iter().map(|w| w.branch).collect())
 }
 
+/// Move a worktree from `old_path` to `new_path`.
+///
+/// # Errors
+///
+/// Returns an error if the `git worktree move` command fails.
+pub fn worktree_move(old_path: &str, new_path: &str) -> Result<()> {
+    run_git(&["worktree", "move", old_path, new_path])?;
+    Ok(())
+}
+
 /// Fetch a specific branch from a remote.
 ///
 /// # Errors
