@@ -32,6 +32,6 @@ pub fn run() -> Result<()> {
         return Err(e);
     }
 
-    println!("Renamed '{branch}' → '{new_name}'");
+    println!("Renamed '{branch}' -> '{new_name}'");
     Ok(())
 }

@@ -26,7 +26,7 @@ pub fn run() -> Result<()> {
     let wts = git::worktree_list()?;
     println!("\nWorktrees ({}):", wts.len());
     for wt in &wts {
-        println!("  {} — {}", wt.branch, wt.path);
+        println!("  {} - {}", wt.branch, wt.path);
     }
 
     // Configuration
