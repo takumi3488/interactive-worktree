@@ -2,9 +2,9 @@ use std::process::Command;
 
 use anyhow::{Context, Result, bail};
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------
 // Internal helpers
-// ─────────────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------
 
 /// Captured output from a git command.
 struct GitOutput {
@@ -194,7 +194,7 @@ pub fn config_get(key: &str) -> Result<Option<String>> {
     let out = run_git_raw(&["config", "--get", key])?;
     match out.code {
         0 => Ok(Some(out.stdout)),
-        // Exit code 1 means the key was not found — that is not an error.
+        // Exit code 1 means the key was not found - that is not an error.
         1 => Ok(None),
         _ => bail!("git config --get failed: {}", out.stderr),
     }
@@ -229,7 +229,7 @@ pub fn config_unset(key: &str) -> Result<()> {
 pub fn config_list(pattern: &str) -> Result<Vec<(String, String)>> {
     let out = run_git_raw(&["config", "--get-regexp", pattern])?;
     match out.code {
-        // Exit code 1 means no keys matched — return empty list.
+        // Exit code 1 means no keys matched - return empty list.
         1 => return Ok(Vec::new()),
         0 => {}
         _ => bail!("git config --get-regexp failed: {}", out.stderr),
@@ -340,7 +340,7 @@ mod tests {
     use super::*;
 
     // -----------------------------------------------------------------------
-    // parse_worktree_porcelain — pure parsing tests (no git required)
+    // parse_worktree_porcelain - pure parsing tests (no git required)
     // -----------------------------------------------------------------------
 
     #[test]
