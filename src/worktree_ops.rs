@@ -328,7 +328,6 @@ mod tests {
     use std::sync::{Mutex, MutexGuard};
 
     static SERIAL: Mutex<()> = Mutex::new(());
-    static ENV_MUTEX: Mutex<()> = Mutex::new(());
 
     struct TempRepo {
         path: PathBuf,
@@ -396,8 +395,8 @@ mod tests {
         );
     }
 
-    fn lock_env() -> std::sync::MutexGuard<'static, ()> {
-        ENV_MUTEX
+    fn lock_serial() -> std::sync::MutexGuard<'static, ()> {
+        SERIAL
             .lock()
             .unwrap_or_else(std::sync::PoisonError::into_inner)
     }
@@ -550,14 +549,14 @@ mod tests {
 
     #[test]
     fn test_request_cd_noop_when_env_var_not_set() {
-        let _lock = lock_env();
+        let _lock = lock_serial();
         unsafe { std::env::remove_var("IWT_CD_FILE") };
         assert!(request_cd("/some/worktree/path").is_ok());
     }
 
     #[test]
     fn test_request_cd_writes_path_to_file_when_env_var_set() -> Result<()> {
-        let _lock = lock_env();
+        let _lock = lock_serial();
         let tmp_file = std::env::temp_dir().join("iwt_cd_write_test.txt");
         let _guard = CdFileGuard::set_file(&tmp_file);
         request_cd("/repo/worktrees/my-feature")?;
@@ -568,7 +567,7 @@ mod tests {
 
     #[test]
     fn test_request_cd_returns_error_when_write_fails() {
-        let _lock = lock_env();
+        let _lock = lock_serial();
         let _guard = CdFileGuard::set("/nonexistent/directory/cd_file.txt");
         let Err(e) = request_cd("/some/path") else {
             panic!("expected request_cd to return an error");
@@ -581,7 +580,7 @@ mod tests {
 
     #[test]
     fn test_request_cd_overwrites_existing_file_content() -> Result<()> {
-        let _lock = lock_env();
+        let _lock = lock_serial();
         let tmp_file = std::env::temp_dir().join("iwt_cd_overwrite_test.txt");
         let _ = std::fs::write(&tmp_file, "stale_path");
         let _guard = CdFileGuard::set_file(&tmp_file);
